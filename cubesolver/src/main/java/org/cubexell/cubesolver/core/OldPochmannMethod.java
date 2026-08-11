@@ -322,40 +322,33 @@ public class OldPochmannMethod
 
 
     public void solveEdges() {
-        HashSet<String> unsolvedEdges = createUnsolvedEdges();//TODO: setup a HASHSET of all edges to solve by the name of unsovedEdges
-        while (unsolvedEdges.size()>0 && !cube.areEdgesSolved()) {//TODO: inside the parentheses, check if the #unsovled edges>0 AND if the edges are solved
-            System.out.println("num unsolved edges: " + unsolvedEdges.size());
-            String faceColor = getEdgeToBeSolved();//TODO: define a String named faceColor to be the edge in the buffer spot
-
-            System.out.println("faceColor: " + faceColor);
-            while (!"WR".equalsIgnoreCase(faceColor) && !"RW".equalsIgnoreCase(faceColor)) {
-                //TODO: execute the edge swap for the face color
-                executeEdgeSwap(faceColor, solution);
-                if (unsolvedEdges.contains(faceColor)) {
-                    unsolvedEdges.remove(faceColor);//then it removes that edge from the list
+        HashSet<String> unsolvedEdges = createUnsolvedEdges();
+        while(unsolvedEdges.size() > 0 && !cube.areEdgesSolved()) {
+            String faceColor = getEdgeToBeSolved();
+            while(!"WR".equalsIgnoreCase(faceColor)&& !"RW".equalsIgnoreCase(faceColor)){
+                executeEdgeSwap(faceColor,solution);
+                if(unsolvedEdges.contains(faceColor)){
+                    unsolvedEdges.remove(faceColor);
                     unsolvedEdges.remove(cube.getReverseOfString(faceColor));
                 }
-                faceColor = getEdgeToBeSolved();//TODO: assign the new edge in the buffer to the variable faceColor
+                faceColor = getEdgeToBeSolved();
+            }
 
-                System.out.println("faceColor: " + faceColor);
-                System.out.println("num unsolved edges: " + unsolvedEdges.size());
-                //if the next edge to solve is the buffer, it will exit this loop, otherwise, it repeats this process
+            if(unsolvedEdges.size()>0){
+                executeEdgeSwap(unsolvedEdges.iterator().next(),solution);
             }
-            //if we are here, it means we have exited the previous loop, and that the buffer(white-red) is in its spot
-            if (unsolvedEdges.size() > 0) {
-                System.out.println("new cycle, swapping with: " + unsolvedEdges.iterator().next());
-                System.out.println("number of unsolved edges: " + unsolvedEdges.size());
-                //TODO: execute edge swap with a random unsolved edge (hint: take the next value in unsolvedEdges)
+            executeEdgeSwap(faceColor, solution);
+            if(unsolvedEdges.contains(faceColor)){
+                unsolvedEdges.remove(cube.getReverseOfString(faceColor));
             }
-            //check if edges are solved, if it is, exit loop, if not, repeat for the new cycle
         }
-        //if you're here, it means edges are done, and we can more on to corners
-        System.out.println("Done with edges..., unsolved edges: " + unsolvedEdges.size());
+
+
     }
 
     public void solveCorners() {
         HashSet<String> unsolvedCorners = createUnsolvedCorners();//setup a list of all corners to solve, we will remove corners once they're solved
-        while (unsolvedCorners.size() > 0  && !cube.areCornersSolved()) {//loops through all corners until there are none left to solve
+        while (unsolvedCorners.size() > 0 && !cube.areCornersSolved()) {//loops through all corners until there are none left to solve
             System.out.println("num unsolved corners: " + unsolvedCorners.size());
             char a = cube.cubeColors[UP_FACE_INDEX][0][0];
             char r = cube.cubeColors[BACK_FACE_INDEX][0][2];
